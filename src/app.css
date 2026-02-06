@@ -1,0 +1,154 @@
+/* GLOBAL RESETS */
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #ECF0F1;
+  --brand-primary: #3498DB;
+  --brand-dark: #34495E;
+  --accent: #F8C957;
+
+  --text-main: #2c3e50;
+  --text-muted: #7f8c8d;
+
+  --font-main: "Lexend", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TYPOGRAPHY */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* UTILITIES */
+/* UTILITIES */
+.text-gradient {
+  background: linear-gradient(135deg, var(--brand-primary), var(--accent), var(--brand-dark), var(--brand-primary));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  animation: gradientMove 8s infinite linear;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* GRADIENT BORDERS (Keyframes) */
+@keyframes borderRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-border-container {
+  position: relative;
+  background: var(--bg-primary);
+  border-radius: 24px;
+  z-index: 1;
+  padding: 1px;
+  /* The border width */
+  overflow: hidden;
+}
+
+.gradient-border-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--brand-primary), var(--accent), #2ecc71, var(--brand-primary));
+  background-size: 300% 300%;
+  border-radius: inherit;
+  animation: borderRotate 4s linear infinite;
+}
+
+.gradient-border-content {
+  background: var(--bg-secondary);
+  /* Inner card bg */
+  border-radius: 23px;
+  /* Slightly less than container */
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* GLASSMORPHISM REFINED */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: var(--font-main);
+}
+
+/* CENTERED FOOTER UTILS (Applied via component style, but generic helper here) */
+.footer-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

@@ -1,612 +1,711 @@
 <script>
     import { onMount } from "svelte";
-    import { fly, fade } from "svelte/transition";
+    import { fly, fade, scale } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
+    import {
+        ArrowRight,
+        ChevronRight,
+        Check,
+        Zap,
+        Globe,
+        ShieldCheck,
+    } from "lucide-svelte";
+    import Navbar from "../Components/Navbar.svelte";
 
-    export let navigate; // Receive navigate function
-    let visible = false;
+    // Asset Import
+    import creditCardImg from "../assets/CreditCard.png";
+
+    export let navigate;
+
+    // --- ANIMATION STATE ---
+    let mounted = false;
+
+    onMount(() => {
+        mounted = true;
+    });
 
     // Trusted Users Counter
-    const usersCount = tweened(0, {
-        duration: 2000,
-        easing: cubicOut,
-    });
+    const usersCount = tweened(0, { duration: 3000, easing: cubicOut });
+    const transactionSpeed = tweened(0, { duration: 2500, easing: cubicOut });
 
-    const transactionSpeed = tweened(0, {
-        duration: 1500,
-        easing: cubicOut,
-    });
-
+    // Scroll Logic for Stats/Why Choose
     let statsSection;
     let statsVisible = false;
 
-    let observer;
-
     $: if (statsSection && !statsVisible) {
-        observer = new IntersectionObserver(
+        const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting && !statsVisible) {
                         statsVisible = true;
                         usersCount.set(50000);
                         transactionSpeed.set(99.9);
-                        observer.unobserve(entry.target);
                     }
                 });
             },
-            { threshold: 0.5 },
+            { threshold: 0.3 },
         );
         observer.observe(statsSection);
     }
 
-    onMount(() => {
-        visible = true;
-    });
-
-    const sectionDelay = 200;
+    const sectionDelay = 150;
 </script>
 
 <svelte:head>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
-        rel="stylesheet"
-    />
+    <title>Atomic Bank - The Future of Banking</title>
 </svelte:head>
 
-<main class="atomic-app">
-    <!-- Floating Background Atoms -->
-    <div class="atom atom-1"></div>
-    <div class="atom atom-2"></div>
-    <div class="atom atom-3"></div>
-    <div class="atom atom-4"></div>
-    <div class="atom atom-5"></div>
+<Navbar />
 
-    <!-- Navigation (Simple/Minimal as implied, though strict list didn't specify nav content, keeping it part of Hero or separate) -->
-    <!-- Merging simplified Nav into Layout or Hero for structure -->
-
-    <!-- 1. Hero Section -->
-    {#if visible}
-        <section
-            class="hero"
-            in:fly={{ y: 12, duration: 300, delay: 0, easing: cubicOut }}
-        >
-            <div class="glass-panel hero-content">
-                <h1 class="headline">
-                    Atomic <span class="highlight">Bank</span>
-                </h1>
-                <p class="subheadline">
-                    The future of atomic transactions. Precise. Secure. Instant.
-                </p>
-                <button
-                    class="cta-button primary"
-                    on:click={() => navigate("login")}
+<main class="home-container">
+    <!-- 1. HERO SECTION -->
+    <section class="hero" id="hero">
+        {#if mounted}
+            <div class="hero-content grid-2">
+                <!-- Left: Text -->
+                <div
+                    class="hero-text"
+                    in:fly={{
+                        y: 30,
+                        duration: 800,
+                        delay: 100,
+                        easing: cubicOut,
+                    }}
                 >
-                    <span class="btn-text">Start Banking</span>
-                </button>
-            </div>
-        </section>
-    {/if}
+                    <div class="test-gradient-text"></div>
+                    <!-- Hidden utility check if needed -->
+                    <h1>
+                        Atomic <span class="text-gradient">Precision.</span><br
+                        />
+                        Global <span class="text-gradient">Scale.</span>
+                    </h1>
+                    <p>
+                        Experience the future of finance with instant coherence,
+                        atomic security, and zero-friction transactions across
+                        the globe.
+                    </p>
 
-    <!-- 2. Revolutionizing Banking -->
-    {#if visible}
-        <section
-            class="features"
-            in:fly={{
-                y: 12,
-                duration: 300,
-                delay: sectionDelay,
-                easing: cubicOut,
-            }}
-        >
-            <h2 class="section-title">Revolutionizing Banking</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <h3>Instant Sync</h3>
-                    <p>Real-time coherence across all your devices.</p>
-                </div>
-                <div class="card">
-                    <h3>Zero Friction</h3>
-                    <p>Seamless financial flows without the wait.</p>
-                </div>
-                <div class="card">
-                    <h3>Global Access</h3>
-                    <p>Your capital, available anywhere on Earth.</p>
-                </div>
-            </div>
-        </section>
-    {/if}
-
-    <!-- 3. How It Works -->
-    {#if visible}
-        <section
-            class="how-it-works"
-            in:fly={{
-                y: 12,
-                duration: 300,
-                delay: sectionDelay * 2,
-                easing: cubicOut,
-            }}
-        >
-            <h2 class="section-title">How It Works</h2>
-            <div class="steps-container">
-                <div class="step">
-                    <div class="step-number">01</div>
-                    <h4>Connect</h4>
-                    <p>Link your verified identity securely.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">02</div>
-                    <h4>Deposit</h4>
-                    <p>Transfer funds with atomic precision.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">03</div>
-                    <h4>Transact</h4>
-                    <p>Experience instant global payments.</p>
-                </div>
-            </div>
-        </section>
-    {/if}
-
-    <!-- 4. Why Choose Atomic Bank -->
-    {#if visible}
-        <section
-            class="why-choose"
-            bind:this={statsSection}
-            in:fly={{
-                y: 12,
-                duration: 300,
-                delay: sectionDelay * 3,
-                easing: cubicOut,
-            }}
-        >
-            <h2 class="section-title">Why Atomic?</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">
-                        {Math.floor($usersCount).toLocaleString()}+
+                    <div class="cta-group">
+                        <button
+                            class="cta-primary"
+                            on:click={() => navigate("login")}
+                        >
+                            <span>Get Started</span>
+                            <div class="icon-wrapper">
+                                <ArrowRight size={20} />
+                            </div>
+                        </button>
                     </div>
-                    <div class="stat-label">Trusted Users</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">
-                        {$transactionSpeed.toFixed(1)}%
-                    </div>
-                    <div class="stat-label">Uptime & Reliability</div>
-                </div>
-            </div>
-            <div class="trust-badges">
-                <span class="badge">256-bit Encryption</span>
-                <span class="badge">Biometric Lock</span>
-                <span class="badge">Atomic Integrity</span>
-            </div>
-        </section>
-    {/if}
 
-    <!-- 5. Ready to Bank Smarter -->
-    {#if visible}
-        <section
-            class="cta-section"
-            in:fly={{
-                y: 12,
-                duration: 300,
-                delay: sectionDelay * 4,
-                easing: cubicOut,
-            }}
-        >
-            <div class="glass-panel cta-panel">
-                <h2>Ready to Bank Smarter?</h2>
-                <p>Join the revolution today.</p>
-                <button
-                    class="cta-button secondary"
-                    on:click={() => navigate("login")}
+                <!-- Right: Card Image -->
+                <div
+                    class="hero-image"
+                    in:fly={{
+                        y: 50,
+                        duration: 1000,
+                        delay: 300,
+                        easing: cubicOut,
+                    }}
                 >
-                    <span class="btn-text">Open Account</span>
-                </button>
+                    <div
+                        in:scale={{
+                            duration: 1000,
+                            delay: 300,
+                            start: 0.8,
+                            easing: cubicOut,
+                        }}
+                    >
+                        <img
+                            src={creditCardImg}
+                            alt="Atomic Bank Credit Card"
+                            class="floating-card"
+                        />
+                    </div>
+                </div>
             </div>
-        </section>
-    {/if}
+        {/if}
+    </section>
 
-    <!-- 6. Footer -->
-    {#if visible}
-        <footer
-            in:fly={{
-                y: 12,
-                duration: 300,
-                delay: sectionDelay * 5,
-                easing: cubicOut,
-            }}
-        >
+    <!-- 2. ABOUT US SECTION (SOLID) -->
+    <section class="section-solid about-us" id="about">
+        {#if mounted}
+            <div
+                class="container about-container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="section-header">
+                    <h2>About Us</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="glass-panel about-panel">
+                    <p>
+                        Atomic Bank was founded on a simple principle: Financial
+                        transactions should be as fundamental and reliable as
+                        physics itself. We are rebuilding the banking stack from
+                        the ground up, replacing legacy friction with atomic
+                        precision.
+                    </p>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 3. REVOLUTIONIZING BANKING (FEATURES - LIGHT) -->
+    <section class="section-light features">
+        {#if mounted}
+            <div
+                class="container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay * 2,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="section-header">
+                    <h2>Revolutionizing Banking</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="grid-3">
+                    <!-- Feature 1 -->
+                    <div class="gradient-border-container">
+                        <div class="gradient-border-content feature-card">
+                            <div class="icon-box">
+                                <Zap size={32} color="#3498DB" />
+                            </div>
+                            <h3>Instant Sync</h3>
+                            <p>Real-time coherence across all your devices.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="gradient-border-container">
+                        <div class="gradient-border-content feature-card">
+                            <div class="icon-box">
+                                <ShieldCheck size={32} color="#F8C957" />
+                            </div>
+                            <h3>Zero Friction</h3>
+                            <p>Seamless flows. Bank-grade security.</p>
+                        </div>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="gradient-border-container">
+                        <div class="gradient-border-content feature-card">
+                            <div class="icon-box">
+                                <Globe size={32} color="#34495E" />
+                            </div>
+                            <h3>Global Access</h3>
+                            <p>Your capital, available anywhere on Earth.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 4. HOW IT WORKS (3 STEPS - LIGHT) -->
+    <section class="section-light how-it-works">
+        {#if mounted}
+            <div
+                class="container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay * 3,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-card glass-panel">
+                        <div class="step-num">01</div>
+                        <h4>Connect</h4>
+                        <p>Link your verified identity securely in seconds.</p>
+                    </div>
+                    <div class="step-arrow">
+                        <ChevronRight size={24} color="#BDC3C7" />
+                    </div>
+                    <div class="step-card glass-panel">
+                        <div class="step-num">02</div>
+                        <h4>Deposit</h4>
+                        <p>Transfer funds with absolute atomic precision.</p>
+                    </div>
+                    <div class="step-arrow">
+                        <ChevronRight size={24} color="#BDC3C7" />
+                    </div>
+                    <div class="step-card glass-panel">
+                        <div class="step-num">03</div>
+                        <h4>Transact</h4>
+                        <p>Experience instant global payments anywhere.</p>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 5. WHY CHOOSE ATOMIC BANK (STATS - SOLID) -->
+    <section class="section-solid stats" bind:this={statsSection}>
+        {#if mounted}
+            <div
+                class="container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay * 4,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="section-header">
+                    <h2>Why Choose Atomic</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="gradient-border-container">
+                        <div class="gradient-border-content stat-card">
+                            <span class="stat-num"
+                                >{Math.floor(
+                                    $usersCount,
+                                ).toLocaleString()}+</span
+                            >
+                            <span class="stat-label">Trusted Users</span>
+                        </div>
+                    </div>
+                    <div class="gradient-border-container">
+                        <div class="gradient-border-content stat-card">
+                            <span class="stat-num"
+                                >{$transactionSpeed.toFixed(1)}%</span
+                            >
+                            <span class="stat-label">Uptime & Reliability</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 6. READY TO BANK SMARTER (CTA) -->
+    <section class="section-light cta-section">
+        {#if mounted}
+            <div
+                class="container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay * 5,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="glass-panel cta-panel">
+                    <h2 class="text-gradient">Ready to Bank Smarter?</h2>
+                    <p>
+                        Join the revolution today and take control of your
+                        financial atoms.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <button
+                            class="cta-primary"
+                            on:click={() => navigate("register")}
+                        >
+                            <span>Open Account</span>
+                            <div class="icon-wrapper">
+                                <ArrowRight size={20} />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 7. CONTACT (SOLID) -->
+    <section class="section-solid contact" id="contact">
+        {#if mounted}
+            <div
+                class="container"
+                in:fly={{
+                    y: 30,
+                    duration: 800,
+                    delay: sectionDelay * 6,
+                    easing: cubicOut,
+                }}
+            >
+                <div class="section-header">
+                    <h2>Contact</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="contact-grid">
+                    <div class="glass-panel contact-box">
+                        <h4>Support</h4>
+                        <p>help@atomicbank.com</p>
+                    </div>
+                    <div class="glass-panel contact-box">
+                        <h4>Media</h4>
+                        <p>press@atomicbank.com</p>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </section>
+
+    <!-- 8. FOOTER -->
+    <footer>
+        <div class="container footer-centered">
             <p>&copy; 2026 Atomic Bank. All rights reserved.</p>
-            <div class="footer-links">
+            <div class="links">
                 <span>Privacy</span>
                 <span>Terms</span>
                 <span>Security</span>
             </div>
-        </footer>
-    {/if}
+        </div>
+    </footer>
 </main>
 
 <style>
-    /* VARIABLES */
-    :global(body) {
-        margin: 0;
-        padding: 0;
-        background-color: #05001a; /* Very dark backup */
-        color: #fff;
-        font-family: "Lexend", sans-serif;
+    /* LAYOUT BASE */
+    .home-container {
+        width: 100%;
         overflow-x: hidden;
     }
 
-    .atomic-app {
-        position: relative;
-        min-height: 100vh;
-        width: 100%;
-        overflow: hidden;
-        background: radial-gradient(circle at 50% 0%, #006c68 0%, #022c2b 100%);
-        padding-bottom: 4rem;
-    }
-
-    /* TYPOGRAPHY */
-    h1,
-    h2,
-    h3,
-    h4,
-    p,
-    span,
-    div {
-        color: #ffffff;
-    }
-
-    .headline {
-        font-size: 3.5rem;
-        font-weight: 700;
-        letter-spacing: -1px;
-        margin-bottom: 1rem;
-    }
-
-    .subheadline {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 300;
-        margin-bottom: 2rem;
-    }
-
-    .highlight {
-        background: linear-gradient(
-            135deg,
-            #fdff84 0%,
-            #a3f7bf 50%,
-            #29a19c 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .section-title {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        opacity: 0.9;
-    }
-
-    /* SECTIONS */
     section {
-        padding: 4rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
+        padding: 6rem 2rem;
+        width: 100%;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        perspective: 1000px; /* For 3D text effects if needed */
+    }
+
+    .container {
+        max-width: 1200px;
+        width: 100%;
+    }
+
+    .section-solid {
+        background: var(--bg-primary);
+    }
+    .section-light {
+        background: var(--bg-secondary);
+    }
+
+    /* HEADER & DIVIDER */
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--brand-dark);
+    }
+
+    .divider {
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--brand-primary), var(--accent));
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+
+    /* HERO */
+    .hero {
+        min-height: 100vh;
+        align-items: center;
+        background: var(--bg-primary);
+        padding-top: 0;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
         align-items: center;
     }
 
-    /* GLASSMORPHISM */
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 24px;
-        padding: 4rem;
-        text-align: center;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        width: 100%;
-        max-width: 800px;
-        position: relative;
-        overflow: hidden;
+    .hero-text h1 {
+        font-size: 4rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        letter-spacing: -2px;
     }
 
-    /* CARD DESIGN */
-    .card {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 2rem;
-        text-align: left;
+    .hero-text p {
+        font-size: 1.25rem;
+        margin-bottom: 3rem;
+        max-width: 90%;
+    }
+
+    /* CTA BUTTON */
+    .cta-primary {
         position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 2.5rem;
+        background: var(--brand-dark);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
         cursor: pointer;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 10;
     }
 
-    .card:hover {
-        transform: translateY(-4px);
-        background: rgba(255, 255, 255, 0.08);
+    .cta-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(52, 73, 94, 0.2);
+        padding-right: 3.5rem;
     }
 
-    /* ANIMATED BORDER GRADIENT */
-    .card::before,
-    .cta-button::before {
-        content: "";
+    .icon-wrapper {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: inherit;
-        padding: 1px; /* border width */
-        background: linear-gradient(
-            90deg,
-            #006c68,
-            #29a19c,
-            #a3f7bf,
-            #fdff84,
-            #006c68
-        );
-        background-size: 300% 300%;
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        animation: borderRotate 4s linear infinite;
-        pointer-events: none;
+        right: 1.5rem;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
     }
 
-    @keyframes borderRotate {
+    .cta-primary:hover .icon-wrapper {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* HERO IMAGE */
+    .hero-image {
+        display: flex;
+        justify-content: center;
+    }
+
+    .floating-card {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        border-radius: 16px;
+        animation: floatCard 6s ease-in-out infinite;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes floatCard {
         0% {
-            background-position: 0% 50%;
+            transform: translateY(0px) rotateX(0deg);
         }
         50% {
-            background-position: 100% 50%;
+            transform: translateY(-20px) rotateX(2deg);
         }
         100% {
-            background-position: 0% 50%;
+            transform: translateY(0px) rotateX(0deg);
         }
     }
 
+    /* ABOUT US */
+    .about-panel {
+        padding: 4rem;
+        text-align: center;
+        font-size: 1.5rem;
+        color: var(--brand-dark);
+        font-weight: 300;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* FEATURES GRID */
     .grid-3 {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 2rem;
-        width: 100%;
     }
 
-    .card h3 {
+    .feature-card {
+        padding: 2.5rem;
+        text-align: left;
+        /* Inherits border radius from wrapper content div via global css */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        /* Subtle lift handled by transform on container if desired, but 
+           pure solid/border requirement might prefer static solidity. 
+           Let's add subtle inner lift */
+    }
+
+    .icon-box {
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
         font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #fdff84;
+        margin-bottom: 1rem;
+        color: var(--brand-dark);
     }
 
-    .card p {
-        color: rgba(255, 255, 255, 0.7);
-        font-weight: 300;
-    }
-
-    /* BUTTONS */
-    .cta-button {
-        position: relative;
-        padding: 1rem 3rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: none;
-        border-radius: 50px;
-        color: #fff;
-        font-family: inherit;
-        font-weight: 600;
-        font-size: 1.1rem;
-        cursor: pointer;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .cta-button:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: scale(1.02);
-    }
-
-    .cta-button.primary {
-        background: linear-gradient(
-            135deg,
-            rgba(0, 108, 104, 0.8),
-            rgba(41, 161, 156, 0.6)
-        );
-    }
-
-    /* STEPS */
+    /* HOW IT WORKS */
     .steps-container {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        gap: 2rem;
-        width: 100%;
-        flex-wrap: wrap;
+        gap: 1rem;
     }
 
-    .step {
+    .step-card {
         flex: 1;
-        min-width: 250px;
+        padding: 2.5rem;
         text-align: center;
-        padding: 2rem;
+        border-radius: 20px;
+        transition: transform 0.3s ease;
     }
 
-    .step-number {
-        font-size: 4rem;
+    .step-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .step-num {
+        font-size: 3rem;
         font-weight: 800;
-        color: rgba(253, 255, 132, 0.4);
-        margin-bottom: -1rem;
-        position: relative;
-        z-index: 0;
+        color: rgba(52, 152, 219, 0.2); /* Brand muted */
+        margin-bottom: 1rem;
+        line-height: 1;
     }
 
-    .step h4 {
-        font-size: 1.5rem;
+    .step-card h4 {
         margin-bottom: 0.5rem;
-        position: relative;
-        z-index: 1;
+        font-size: 1.25rem;
     }
 
-    .step p {
-        color: rgba(255, 255, 255, 0.6);
+    .step-arrow {
+        display: flex;
+        align-items: center;
+        opacity: 0.5;
     }
 
-    /* STATS & BADGES */
+    /* STATS / WHY CHOOSE */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
-        margin-bottom: 4rem;
-        width: 100%;
-        text-align: center;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        max-width: 900px;
+        margin: 0 auto;
     }
 
-    .stat-value {
-        font-size: 3rem;
+    .stat-card {
+        padding: 3rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .stat-num {
+        font-size: 3.5rem;
         font-weight: 700;
-        color: #fdff84;
+        color: var(--brand-primary);
+        line-height: 1.2;
     }
 
     .stat-label {
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.1rem;
         text-transform: uppercase;
         letter-spacing: 1px;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
     }
 
-    .trust-badges {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
+    /* CTA SECTION */
+    .cta-panel {
+        padding: 4rem;
+        text-align: center;
+        border-radius: 30px;
+        max-width: 800px;
+        margin: 0 auto;
     }
 
-    .badge {
-        padding: 0.5rem 1.5rem;
-        background: rgba(44, 52, 55, 0.6);
-        border: 1px solid rgba(253, 255, 132, 0.3);
-        border-radius: 50px;
-        font-size: 0.9rem;
-        color: #fdff84;
+    .cta-panel h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
     }
 
-    /* FLOATING ATOMS ANIMATION */
-    .atom {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.4;
-        z-index: 0;
-        pointer-events: none;
-        animation: floatAtom 15s infinite ease-in-out alternate;
+    /* CONTACT GRID */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
     }
 
-    .atom-1 {
-        width: 400px;
-        height: 400px;
-        background: #006c68;
-        top: -10%;
-        left: -10%;
-        animation-delay: 0s;
+    .contact-box {
+        padding: 2rem;
+        text-align: center;
+        border-radius: 16px;
     }
 
-    .atom-2 {
-        width: 500px;
-        height: 500px;
-        background: #29a19c;
-        bottom: 10%;
-        right: -10%;
-        animation-delay: -5s;
-    }
-
-    .atom-3 {
-        width: 300px;
-        height: 300px;
-        background: #a3f7bf;
-        top: 40%;
-        left: 30%;
-        opacity: 0.3;
-        animation-delay: -10s;
-    }
-
-    .atom-4 {
-        width: 200px;
-        height: 200px;
-        background: #a3f7bf;
-        top: 15%;
-        right: 15%;
-        opacity: 0.25;
-        animation-delay: -2s;
-    }
-
-    .atom-5 {
-        width: 350px;
-        height: 350px;
-        background: #fdff84;
-        bottom: 5%;
-        left: 10%;
-        opacity: 0.2;
-        animation-delay: -7s;
-    }
-
-    @keyframes floatAtom {
-        0% {
-            transform: translate(0, 0);
-        }
-        100% {
-            transform: translate(30px, 50px);
-        }
+    .contact-box h4 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
     }
 
     /* FOOTER */
     footer {
-        text-align: center;
-        padding-top: 4rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        color: rgba(255, 255, 255, 0.4);
-        width: 80%;
-        margin: 0 auto;
+        background: var(--bg-primary);
+        padding: 4rem 2rem;
+        border-top: 1px solid var(--bg-secondary);
+        color: var(--text-muted);
     }
 
-    .footer-links {
+    .links {
+        margin-top: 1.5rem;
         display: flex;
-        justify-content: center;
         gap: 2rem;
-        margin-top: 1rem;
         font-size: 0.9rem;
     }
 
-    .footer-links span {
+    .links span {
         cursor: pointer;
-        transition: color 0.3s;
+        transition: color 0.2s;
     }
 
-    .footer-links span:hover {
-        color: #29a19c;
+    .links span:hover {
+        color: var(--brand-primary);
     }
 
     /* RESPONSIVE */
-    @media (max-width: 768px) {
-        .headline {
-            font-size: 2.5rem;
-        }
-        .grid-3 {
+    @media (max-width: 900px) {
+        .grid-2,
+        .stats-grid,
+        .contact-grid {
             grid-template-columns: 1fr;
+            text-align: center;
         }
+
         .steps-container {
             flex-direction: column;
+        }
+
+        .step-arrow {
+            display: none;
+        } /* Hide arrows on mobile stack */
+
+        .hero-text h1 {
+            font-size: 3rem;
         }
     }
 </style>
